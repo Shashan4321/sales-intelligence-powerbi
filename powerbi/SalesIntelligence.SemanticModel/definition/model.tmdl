@@ -1,0 +1,17 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	discourageImplicitMeasures
+	sourceQueryCulture: en-IN
+
+ref table dim_date
+ref table dim_customer
+ref table dim_store
+ref table dim_product
+ref table fact_sales
+ref table security_user_country
+ref table 'Top N'
+ref table 'Time Intelligence'
+
+ref role 'Country Manager'
+ref role 'India Only'

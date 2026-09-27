@@ -1,0 +1,5 @@
+/// Folder containing the gold CSVs produced by `make etl` (keep the trailing backslash).
+expression DataFolder = "C:\sales-intelligence-powerbi\data\gold\" meta [IsParameterQuery = true, Type = "Text", IsParameterQueryRequired = true]
+	queryGroup: Parameters
+
+queryGroup Parameters
