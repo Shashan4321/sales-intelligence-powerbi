@@ -1,0 +1,76 @@
+{
+  "n_customers": 3077,
+  "churn_rate_pct": 43.2,
+  "test_size": 770,
+  "logistic_regression": {
+    "roc_auc": 0.919,
+    "pr_auc": 0.925,
+    "top20_churn_rate_pct": 100.0,
+    "top20_lift": 2.31
+  },
+  "gradient_boosting": {
+    "roc_auc": 0.923,
+    "pr_auc": 0.927,
+    "top20_churn_rate_pct": 100.0,
+    "top20_lift": 2.31
+  },
+  "top_drivers": [
+    [
+      "recency_days",
+      2.323
+    ],
+    [
+      "avg_discount",
+      0.305
+    ],
+    [
+      "orders_last_90d",
+      0.263
+    ],
+    [
+      "orders_per_month",
+      0.253
+    ],
+    [
+      "avg_order_value",
+      0.174
+    ]
+  ],
+  "rfm_segments": [
+    {
+      "segment": "At risk",
+      "customers": 571,
+      "churn_rate_pct": 67.6
+    },
+    {
+      "segment": "Champions",
+      "customers": 888,
+      "churn_rate_pct": 5.7
+    },
+    {
+      "segment": "Hibernating",
+      "customers": 968,
+      "churn_rate_pct": 81.4
+    },
+    {
+      "segment": "Needs attention",
+      "customers": 79,
+      "churn_rate_pct": 12.7
+    },
+    {
+      "segment": "Promising",
+      "customers": 571,
+      "churn_rate_pct": 16.5
+    }
+  ],
+  "month3_retention_pct": {
+    "2023Q1": 45.0,
+    "2023Q2": 47.6,
+    "2023Q3": 43.9,
+    "2023Q4": 48.6,
+    "2024Q1": 49.9,
+    "2024Q2": 46.3,
+    "2024Q3": 48.9,
+    "2024Q4": 48.5
+  }
+}
