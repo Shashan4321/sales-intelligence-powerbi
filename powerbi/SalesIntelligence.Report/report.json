@@ -1,0 +1,18 @@
+{
+  "config": "{\"version\":\"5.55\",\"themeCollection\":{}}",
+  "layoutOptimization": 0,
+  "resourcePackages": [],
+  "sections": [
+    {
+      "name": "overview",
+      "displayName": "Executive Overview",
+      "displayOption": 1,
+      "width": 1280,
+      "height": 720,
+      "config": "{}",
+      "filters": "[]",
+      "visualContainers": []
+    }
+  ],
+  "filters": "[]"
+}
