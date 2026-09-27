@@ -44,7 +44,14 @@ def test_every_tmdl_column_exists_in_gold(built):
             continue  # calculated tables
         header = csv.read_text().splitlines()[0].split(",")
         cols = re.findall(r"^\tcolumn (\S+)", text, re.M)
-        assert set(cols) == set(header), name
+        # Columns derived or dropped in the Power Query step are not in the CSV header.
+        added = set(re.findall(r'Table\.AddColumn\(\w+, "([^"]+)"', text))
+        removed = {
+            c
+            for group in re.findall(r"Table\.RemoveColumns\(\w+, \{([^}]*)\}", text)
+            for c in re.findall(r'"([^"]+)"', group)
+        }
+        assert set(cols) - added == set(header) - removed, name
 
 
 def test_measures_reference_existing_columns():
@@ -57,7 +64,8 @@ def test_measures_reference_existing_columns():
         all_cols |= {f"{name}[{c.strip(chr(39))}]" for c in re.findall(r"^\tcolumn (.+)$", t, re.M)}
     refs = set(re.findall(r"\b(\w+\[\w+\])", text))
     assert refs <= all_cols, refs - all_cols
-    measures = set(re.findall(r"^\tmeasure '([^']+)'", text, re.M))
+    # Power BI Desktop writes single-word names unquoted (measure Orders), others quoted.
+    measures = {m.strip("'") for m in re.findall(r"^\tmeasure ('[^']+'|\w+)", text, re.M)}
     used = set(re.findall(r"(?<![\w\]])\[([^\]]+)\]", text)) - {c.split("[")[1][:-1] for c in all_cols}
     assert used <= measures, used - measures
 

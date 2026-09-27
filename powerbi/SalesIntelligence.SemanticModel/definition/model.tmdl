@@ -3,6 +3,19 @@ model Model
 	defaultPowerBIDataSourceVersion: powerBI_V3
 	discourageImplicitMeasures
 	sourceQueryCulture: en-IN
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+queryGroup Parameters
+
+	annotation PBI_QueryGroupOrder = 0
+
+annotation PBI_QueryOrder = ["dim_date","dim_customer","dim_store","dim_product","fact_sales","security_user_country","customer_scores","cohort_retention","DataFolder"]
+
+annotation __PBI_TimeIntelligenceEnabled = 0
+
+annotation PBI_ProTooling = ["DevMode"]
 
 ref table dim_date
 ref table dim_customer
@@ -10,8 +23,11 @@ ref table dim_store
 ref table dim_product
 ref table fact_sales
 ref table security_user_country
+ref table customer_scores
+ref table cohort_retention
 ref table 'Top N'
 ref table 'Time Intelligence'
 
 ref role 'Country Manager'
 ref role 'India Only'
+

@@ -13,3 +13,8 @@ relationship fact_sales_store_key
 relationship fact_sales_product_key
 	fromColumn: fact_sales.product_key
 	toColumn: dim_product.product_key
+
+relationship customer_scores_customer_id
+	fromColumn: customer_scores.customer_id
+	toColumn: dim_customer.customer_id
+

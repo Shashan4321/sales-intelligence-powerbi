@@ -1,0 +1,42 @@
+/// Share of each first-purchase quarter cohort still buying N months later (long format).
+/// Produced by `make customers` (src/salesintel/customers.py).
+table cohort_retention
+	lineageTag: 07ba7c02-ad60-489a-80d9-71d150249beb
+
+	/// Average retention for the cohorts and months in context.
+	measure 'Retention %' = AVERAGE ( cohort_retention[retention] )
+		formatString: 0%
+		displayFolder: Churn
+		lineageTag: 5b3c988b-c0e9-4a5b-815f-e8c0263bd46f
+
+	column cohort
+		dataType: string
+		lineageTag: 85bd08f5-6bd0-406c-b21d-fd9d12d55690
+		summarizeBy: none
+		sourceColumn: cohort
+
+	column months_since_first
+		dataType: int64
+		lineageTag: e8d08e19-53d8-46d5-9bc2-d68b15306c60
+		summarizeBy: none
+		sourceColumn: months_since_first
+
+	column retention
+		dataType: double
+		formatString: 0%
+		lineageTag: de56b3f2-b809-4c70-ae13-0e9c75f0af53
+		summarizeBy: none
+		sourceColumn: retention
+
+	partition cohort_retention = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "cohort_retention.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"cohort", type text}, {"months_since_first", Int64.Type}, {"retention_pct", type number}}, "en-US"),
+				    Retention = Table.AddColumn(Typed, "retention", each [retention_pct] / 100, type number),
+				    Result = Table.RemoveColumns(Retention, {"retention_pct"})
+				in
+				    Result
+

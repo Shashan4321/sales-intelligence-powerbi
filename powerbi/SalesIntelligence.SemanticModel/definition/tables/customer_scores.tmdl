@@ -1,0 +1,128 @@
+/// One row per active customer at the 2025-06-30 snapshot: RFM scores, segment and churn-model output.
+/// Produced by `make customers` (src/salesintel/customers.py).
+table customer_scores
+	lineageTag: e3126f59-5eb9-4cb4-a74d-9012e10007b5
+
+	/// Customers with a score (active in the 365 days before the snapshot).
+	measure 'Customers Scored' = COUNTROWS ( customer_scores )
+		formatString: #,0
+		displayFolder: Churn
+		lineageTag: e6c8b9b2-b0b7-4a62-9146-f4a7b96019f9
+
+	/// Customers the model puts in the High risk band (probability >= 0.6).
+	measure 'High Risk Customers' = CALCULATE ( COUNTROWS ( customer_scores ), customer_scores[churn_risk] = "High" )
+		formatString: #,0
+		displayFolder: Churn
+		lineageTag: 4d798575-858e-49d8-9c7e-75ef2711b9ca
+
+	/// Share of scored customers in the High risk band.
+	measure 'High Risk %' = DIVIDE ( [High Risk Customers], [Customers Scored] )
+		formatString: 0.0%
+		displayFolder: Churn
+		lineageTag: 959f65b9-89f8-4aa5-8361-33f0974c02a0
+
+	/// Average predicted churn probability.
+	measure 'Avg Churn Probability' = AVERAGE ( customer_scores[churn_probability] )
+		formatString: 0.0%
+		displayFolder: Churn
+		lineageTag: 470c4000-de67-4aaf-8dd9-d16430f5821a
+
+	/// Share of scored customers who actually made no purchase in Jul-Dec 2025.
+	measure 'Observed Churn %' = AVERAGE ( customer_scores[churned_h2_2025] )
+		formatString: 0.0%
+		displayFolder: Churn
+		lineageTag: 2c0528e2-eeca-4bd2-b38b-aa67416f0d27
+
+	/// Trailing-12-month spend of High risk customers: the revenue a retention campaign protects.
+	measure 'Revenue at Risk' = CALCULATE ( SUM ( customer_scores[monetary] ), customer_scores[churn_risk] = "High" )
+		formatString: ₹ #,0
+		displayFolder: Churn
+		lineageTag: 01dd11ba-6122-4ff0-a93d-8a0510e1cbb8
+
+	column customer_id
+		dataType: string
+		lineageTag: 02cce91e-15b9-4d8f-bb52-e288a8601a3b
+		summarizeBy: none
+		sourceColumn: customer_id
+
+	column R
+		dataType: int64
+		lineageTag: fb26b69e-6522-4a0f-a892-0d90e2c9adfb
+		summarizeBy: none
+		sourceColumn: R
+
+	column F
+		dataType: int64
+		lineageTag: 45171fd8-2043-42c6-aaa3-0b4228a40464
+		summarizeBy: none
+		sourceColumn: F
+
+	column M
+		dataType: int64
+		lineageTag: fe15c81a-c6db-409d-9e80-4ffa0bd89297
+		summarizeBy: none
+		sourceColumn: M
+
+	column segment
+		dataType: string
+		lineageTag: 865bdf1b-24e4-4b69-9567-929e53edfdc3
+		summarizeBy: none
+		sourceColumn: segment
+
+	column churned_h2_2025
+		dataType: int64
+		lineageTag: 4907c2c5-ebb6-41f0-884c-d9f8f6baf015
+		summarizeBy: none
+		sourceColumn: churned_h2_2025
+
+	column recency_days
+		dataType: int64
+		lineageTag: 4f34d74e-e24d-4dd8-8073-dcfd408cd6f5
+		summarizeBy: none
+		sourceColumn: recency_days
+
+	column frequency
+		dataType: int64
+		lineageTag: 5016983f-067a-4497-9573-2618c9614887
+		summarizeBy: none
+		sourceColumn: frequency
+
+	column monetary
+		dataType: double
+		formatString: ₹ #,0
+		lineageTag: b936e50d-fe06-4f22-b5a7-6a7055b9f66b
+		summarizeBy: sum
+		sourceColumn: monetary
+
+	column churn_probability
+		dataType: double
+		formatString: 0.0%
+		lineageTag: 04741375-78ed-4251-a9a4-9755b0b44f7b
+		summarizeBy: none
+		sourceColumn: churn_probability
+
+	column churn_risk
+		dataType: string
+		lineageTag: 83763561-ec9f-49c3-a1e4-e17e36786497
+		summarizeBy: none
+		sourceColumn: churn_risk
+		sortByColumn: risk_order
+
+	column risk_order
+		dataType: int64
+		isHidden
+		lineageTag: d6e0bf06-fe07-40f9-960d-3b0272ff7d61
+		summarizeBy: none
+		sourceColumn: risk_order
+
+	partition customer_scores = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "customer_scores.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"customer_id", type text}, {"R", Int64.Type}, {"F", Int64.Type}, {"M", Int64.Type}, {"segment", type text}, {"churned_h2_2025", Int64.Type}, {"recency_days", Int64.Type}, {"frequency", Int64.Type}, {"monetary", type number}, {"churn_probability", type number}, {"churn_risk", type text}}, "en-US"),
+				    RiskOrder = Table.AddColumn(Typed, "risk_order", each if [churn_risk] = "High" then 1 else if [churn_risk] = "Medium" then 2 else 3, Int64.Type)
+				in
+				    RiskOrder
+

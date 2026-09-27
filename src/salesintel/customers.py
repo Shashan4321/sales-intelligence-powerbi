@@ -179,6 +179,35 @@ def cohort_plot(table: pd.DataFrame, path: Path) -> None:
     plt.close(fig)
 
 
+def export_for_powerbi(
+    seg: pd.DataFrame,
+    feats: pd.DataFrame,
+    model,
+    cohorts: pd.DataFrame,
+    gold: Path = ROOT / "data" / "gold",
+) -> None:
+    """Write customer scores and the cohort matrix for the Power BI 'Customer Churn' page.
+
+    churn_probability is the gradient-boosting score at the 2025-06-30 snapshot; risk bands are
+    High >= 0.6, Medium >= 0.3, Low otherwise. churned_h2_2025 is the observed outcome.
+    """
+    gold.mkdir(parents=True, exist_ok=True)
+    scores = seg.rename(columns={"churned": "churned_h2_2025"}).join(
+        feats[["recency_days", "frequency", "monetary"]]
+    )
+    scores["churn_probability"] = model.predict_proba(feats[model.feature_names_in_])[:, 1].round(4)
+    scores["churn_risk"] = pd.cut(
+        scores["churn_probability"],
+        [0, 0.3, 0.6, 1],
+        labels=["Low", "Medium", "High"],
+        include_lowest=True,
+    )
+    scores.rename_axis("customer_id").reset_index().to_csv(gold / "customer_scores.csv", index=False)
+    long = cohorts.stack().rename("retention_pct").reset_index()
+    long.columns = ["cohort", "months_since_first", "retention_pct"]
+    long.to_csv(gold / "cohort_retention.csv", index=False)
+
+
 def run() -> dict:
     lines = load()
     img = ROOT / "docs" / "img"
@@ -194,7 +223,9 @@ def run() -> dict:
     seg_table["churn_rate_pct"] = (seg_table["churn_rate_pct"] * 100).round(1)
 
     res = train(feats, y)
-    drivers = shap_plot(res.pop("_gbm"), res.pop("_X_te"), img / "shap_summary.png")
+    gbm = res.pop("_gbm")
+    drivers = shap_plot(gbm, res.pop("_X_te"), img / "shap_summary.png")
+    export_for_powerbi(seg, feats, gbm, cohorts)
     res["top_drivers"] = drivers[:5]
     res["rfm_segments"] = seg_table.reset_index().to_dict(orient="records")
     res["month3_retention_pct"] = {k: float(v) for k, v in cohorts[3].dropna().items()}
