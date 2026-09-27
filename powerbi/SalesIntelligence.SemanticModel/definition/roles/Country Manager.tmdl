@@ -1,0 +1,10 @@
+/// Dynamic RLS: each manager sees only the country mapped to their login in security_user_country.
+role 'Country Manager'
+	modelPermission: read
+
+	tablePermission dim_store =
+			dim_store[country]
+				IN CALCULATETABLE (
+					VALUES ( security_user_country[country] ),
+					security_user_country[user_email] = USERPRINCIPALNAME ()
+				)

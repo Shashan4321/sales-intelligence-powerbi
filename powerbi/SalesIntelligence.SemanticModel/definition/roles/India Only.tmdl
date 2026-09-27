@@ -1,0 +1,5 @@
+/// Static RLS example for domestic-only users.
+role 'India Only'
+	modelPermission: read
+
+	tablePermission dim_store = dim_store[country] = "India"
