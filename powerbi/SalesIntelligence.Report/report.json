@@ -1,17 +1,215 @@
 {
-  "config": "{\"version\":\"5.55\",\"themeCollection\":{}}",
+  "config": "{\"version\": \"5.55\", \"themeCollection\": {\"customTheme\": {\"name\": \"portfolio-theme.json\", \"version\": \"5.55\", \"type\": 1}}, \"activeSectionIndex\": 0}",
   "layoutOptimization": 0,
-  "resourcePackages": [],
+  "resourcePackages": [
+    {
+      "resourcePackage": {
+        "name": "RegisteredResources",
+        "type": 1,
+        "items": [
+          {
+            "type": 201,
+            "path": "portfolio-theme.json",
+            "name": "portfolio-theme.json"
+          }
+        ],
+        "disabled": false
+      }
+    }
+  ],
   "sections": [
     {
       "name": "overview",
-      "displayName": "Executive Overview",
+      "displayName": "Executive Sales Overview",
       "displayOption": 1,
       "width": 1280,
       "height": 720,
       "config": "{}",
       "filters": "[]",
-      "visualContainers": []
+      "visualContainers": [
+        {
+          "x": 20,
+          "y": 4,
+          "z": 0,
+          "width": 980,
+          "height": 76,
+          "config": "{\"name\": \"ov_title\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 20, \"y\": 4, \"z\": 0, \"width\": 980, \"height\": 76}}], \"singleVisual\": {\"visualType\": \"textbox\", \"drillFilterOtherVisuals\": true, \"objects\": {\"general\": [{\"properties\": {\"paragraphs\": [{\"textRuns\": [{\"value\": \"Executive Sales Overview\", \"textStyle\": {\"fontSize\": \"20pt\", \"fontWeight\": \"bold\", \"color\": \"#1F4E79\"}}]}, {\"textRuns\": [{\"value\": \"Are we growing, where, and through which channel? Showing FY2025 (Apr-24 to Mar-25).\", \"textStyle\": {\"fontSize\": \"11pt\", \"color\": \"#605E5C\"}}]}]}}]}, \"vcObjects\": {\"background\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"false\"}}}}}], \"dropShadow\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"false\"}}}}}]}}}",
+          "filters": "[]"
+        },
+        {
+          "x": 1040,
+          "y": 14,
+          "z": 0,
+          "width": 220,
+          "height": 60,
+          "config": "{\"name\": \"ov_fy\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 1040, \"y\": 14, \"z\": 0, \"width\": 220, \"height\": 60}}], \"singleVisual\": {\"visualType\": \"slicer\", \"drillFilterOtherVisuals\": true, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"d\", \"Entity\": \"dim_date\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"d\"}}, \"Property\": \"fiscal_year\"}, \"Name\": \"dim_date.fiscal_year\"}]}, \"projections\": {\"Values\": [{\"queryRef\": \"dim_date.fiscal_year\"}]}, \"objects\": {\"data\": [{\"properties\": {\"mode\": {\"expr\": {\"Literal\": {\"Value\": \"'Dropdown'\"}}}}}], \"header\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"false\"}}}}}], \"general\": [{\"properties\": {\"filter\": {\"filter\": {\"Version\": 2, \"From\": [{\"Name\": \"d\", \"Entity\": \"dim_date\", \"Type\": 0}], \"Where\": [{\"Condition\": {\"In\": {\"Expressions\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"d\"}}, \"Property\": \"fiscal_year\"}}], \"Values\": [[{\"Literal\": {\"Value\": \"2025L\"}}]]}}}]}}}}]}, \"vcObjects\": {\"title\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"true\"}}}, \"text\": {\"expr\": {\"Literal\": {\"Value\": \"'Fiscal year (Apr-Mar)'\"}}}}}]}}}",
+          "filters": "[]"
+        },
+        {
+          "x": 20,
+          "y": 86,
+          "z": 0,
+          "width": 300,
+          "height": 94,
+          "config": "{\"name\": \"ov_rev\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 20, \"y\": 86, \"z\": 0, \"width\": 300, \"height\": 94}}], \"singleVisual\": {\"visualType\": \"card\", \"drillFilterOtherVisuals\": true, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"f\", \"Entity\": \"fact_sales\", \"Type\": 0}], \"Select\": [{\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"f\"}}, \"Property\": \"Total Revenue\"}, \"Name\": \"fact_sales.Total Revenue\"}]}, \"projections\": {\"Values\": [{\"queryRef\": \"fact_sales.Total Revenue\"}]}, \"objects\": {\"categoryLabels\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"false\"}}}}}]}, \"vcObjects\": {\"title\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"true\"}}}, \"text\": {\"expr\": {\"Literal\": {\"Value\": \"'Net revenue'\"}}}}}]}}}",
+          "filters": "[]"
+        },
+        {
+          "x": 333,
+          "y": 86,
+          "z": 0,
+          "width": 300,
+          "height": 94,
+          "config": "{\"name\": \"ov_orders\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 333, \"y\": 86, \"z\": 0, \"width\": 300, \"height\": 94}}], \"singleVisual\": {\"visualType\": \"card\", \"drillFilterOtherVisuals\": true, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"f\", \"Entity\": \"fact_sales\", \"Type\": 0}], \"Select\": [{\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"f\"}}, \"Property\": \"Orders\"}, \"Name\": \"fact_sales.Orders\"}]}, \"projections\": {\"Values\": [{\"queryRef\": \"fact_sales.Orders\"}]}, \"objects\": {\"categoryLabels\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"false\"}}}}}]}, \"vcObjects\": {\"title\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"true\"}}}, \"text\": {\"expr\": {\"Literal\": {\"Value\": \"'Orders'\"}}}}}]}}}",
+          "filters": "[]"
+        },
+        {
+          "x": 646,
+          "y": 86,
+          "z": 0,
+          "width": 300,
+          "height": 94,
+          "config": "{\"name\": \"ov_aov\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 646, \"y\": 86, \"z\": 0, \"width\": 300, \"height\": 94}}], \"singleVisual\": {\"visualType\": \"card\", \"drillFilterOtherVisuals\": true, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"f\", \"Entity\": \"fact_sales\", \"Type\": 0}], \"Select\": [{\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"f\"}}, \"Property\": \"Avg Order Value\"}, \"Name\": \"fact_sales.Avg Order Value\"}]}, \"projections\": {\"Values\": [{\"queryRef\": \"fact_sales.Avg Order Value\"}]}, \"objects\": {\"categoryLabels\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"false\"}}}}}]}, \"vcObjects\": {\"title\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"true\"}}}, \"text\": {\"expr\": {\"Literal\": {\"Value\": \"'Average order value'\"}}}}}]}}}",
+          "filters": "[]"
+        },
+        {
+          "x": 960,
+          "y": 86,
+          "z": 0,
+          "width": 300,
+          "height": 94,
+          "config": "{\"name\": \"ov_yoy\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 960, \"y\": 86, \"z\": 0, \"width\": 300, \"height\": 94}}], \"singleVisual\": {\"visualType\": \"card\", \"drillFilterOtherVisuals\": true, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"f\", \"Entity\": \"fact_sales\", \"Type\": 0}], \"Select\": [{\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"f\"}}, \"Property\": \"Revenue YoY %\"}, \"Name\": \"fact_sales.Revenue YoY %\"}]}, \"projections\": {\"Values\": [{\"queryRef\": \"fact_sales.Revenue YoY %\"}]}, \"objects\": {\"categoryLabels\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"false\"}}}}}]}, \"vcObjects\": {\"title\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"true\"}}}, \"text\": {\"expr\": {\"Literal\": {\"Value\": \"'Revenue YoY %'\"}}}}}]}}}",
+          "filters": "[]"
+        },
+        {
+          "x": 20,
+          "y": 190,
+          "z": 0,
+          "width": 820,
+          "height": 260,
+          "config": "{\"name\": \"ov_trend\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 20, \"y\": 190, \"z\": 0, \"width\": 820, \"height\": 260}}], \"singleVisual\": {\"visualType\": \"lineChart\", \"drillFilterOtherVisuals\": true, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"d\", \"Entity\": \"dim_date\", \"Type\": 0}, {\"Name\": \"f\", \"Entity\": \"fact_sales\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"d\"}}, \"Property\": \"year_month\"}, \"Name\": \"dim_date.year_month\"}, {\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"f\"}}, \"Property\": \"Total Revenue\"}, \"Name\": \"fact_sales.Total Revenue\"}, {\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"f\"}}, \"Property\": \"Revenue PY\"}, \"Name\": \"fact_sales.Revenue PY\"}], \"OrderBy\": [{\"Direction\": 1, \"Expression\": {\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"d\"}}, \"Property\": \"year_month\"}}}]}, \"projections\": {\"Category\": [{\"queryRef\": \"dim_date.year_month\"}], \"Y\": [{\"queryRef\": \"fact_sales.Total Revenue\"}, {\"queryRef\": \"fact_sales.Revenue PY\"}]}, \"vcObjects\": {\"title\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"true\"}}}, \"text\": {\"expr\": {\"Literal\": {\"Value\": \"'Monthly net revenue vs last year'\"}}}}}]}}}",
+          "filters": "[]"
+        },
+        {
+          "x": 860,
+          "y": 190,
+          "z": 0,
+          "width": 400,
+          "height": 512,
+          "config": "{\"name\": \"ov_geo\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 860, \"y\": 190, \"z\": 0, \"width\": 400, \"height\": 512}}], \"singleVisual\": {\"visualType\": \"pivotTable\", \"drillFilterOtherVisuals\": true, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"s\", \"Entity\": \"dim_store\", \"Type\": 0}, {\"Name\": \"f\", \"Entity\": \"fact_sales\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"s\"}}, \"Property\": \"country\"}, \"Name\": \"dim_store.country\"}, {\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"s\"}}, \"Property\": \"state\"}, \"Name\": \"dim_store.state\"}, {\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"s\"}}, \"Property\": \"city\"}, \"Name\": \"dim_store.city\"}, {\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"f\"}}, \"Property\": \"Total Revenue\"}, \"Name\": \"fact_sales.Total Revenue\"}, {\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"f\"}}, \"Property\": \"Revenue Share of Parent\"}, \"Name\": \"fact_sales.Revenue Share of Parent\"}]}, \"projections\": {\"Rows\": [{\"queryRef\": \"dim_store.country\"}, {\"queryRef\": \"dim_store.state\"}, {\"queryRef\": \"dim_store.city\"}], \"Values\": [{\"queryRef\": \"fact_sales.Total Revenue\"}, {\"queryRef\": \"fact_sales.Revenue Share of Parent\"}]}, \"vcObjects\": {\"title\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"true\"}}}, \"text\": {\"expr\": {\"Literal\": {\"Value\": \"'Country > State > City (expand to drill down)'\"}}}}}]}}}",
+          "filters": "[]"
+        },
+        {
+          "x": 20,
+          "y": 464,
+          "z": 0,
+          "width": 400,
+          "height": 238,
+          "config": "{\"name\": \"ov_channel\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 20, \"y\": 464, \"z\": 0, \"width\": 400, \"height\": 238}}], \"singleVisual\": {\"visualType\": \"donutChart\", \"drillFilterOtherVisuals\": true, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"f\", \"Entity\": \"fact_sales\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"f\"}}, \"Property\": \"channel\"}, \"Name\": \"fact_sales.channel\"}, {\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"f\"}}, \"Property\": \"Total Revenue\"}, \"Name\": \"fact_sales.Total Revenue\"}]}, \"projections\": {\"Category\": [{\"queryRef\": \"fact_sales.channel\"}], \"Y\": [{\"queryRef\": \"fact_sales.Total Revenue\"}]}, \"vcObjects\": {\"title\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"true\"}}}, \"text\": {\"expr\": {\"Literal\": {\"Value\": \"'Channel mix'\"}}}}}]}}}",
+          "filters": "[]"
+        },
+        {
+          "x": 440,
+          "y": 464,
+          "z": 0,
+          "width": 400,
+          "height": 238,
+          "config": "{\"name\": \"ov_category\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 440, \"y\": 464, \"z\": 0, \"width\": 400, \"height\": 238}}], \"singleVisual\": {\"visualType\": \"clusteredBarChart\", \"drillFilterOtherVisuals\": true, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"p\", \"Entity\": \"dim_product\", \"Type\": 0}, {\"Name\": \"f\", \"Entity\": \"fact_sales\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"p\"}}, \"Property\": \"category\"}, \"Name\": \"dim_product.category\"}, {\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"f\"}}, \"Property\": \"Total Revenue\"}, \"Name\": \"fact_sales.Total Revenue\"}], \"OrderBy\": [{\"Direction\": 2, \"Expression\": {\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"f\"}}, \"Property\": \"Total Revenue\"}}}]}, \"projections\": {\"Category\": [{\"queryRef\": \"dim_product.category\"}], \"Y\": [{\"queryRef\": \"fact_sales.Total Revenue\"}]}, \"vcObjects\": {\"title\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"true\"}}}, \"text\": {\"expr\": {\"Literal\": {\"Value\": \"'Net revenue by category'\"}}}}}]}}}",
+          "filters": "[]"
+        }
+      ]
+    },
+    {
+      "name": "churn",
+      "displayName": "Customer Churn",
+      "displayOption": 1,
+      "width": 1280,
+      "height": 720,
+      "config": "{}",
+      "filters": "[]",
+      "visualContainers": [
+        {
+          "x": 20,
+          "y": 4,
+          "z": 0,
+          "width": 980,
+          "height": 76,
+          "config": "{\"name\": \"ch_title\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 20, \"y\": 4, \"z\": 0, \"width\": 980, \"height\": 76}}], \"singleVisual\": {\"visualType\": \"textbox\", \"drillFilterOtherVisuals\": true, \"objects\": {\"general\": [{\"properties\": {\"paragraphs\": [{\"textRuns\": [{\"value\": \"Customer Churn\", \"textStyle\": {\"fontSize\": \"20pt\", \"fontWeight\": \"bold\", \"color\": \"#1F4E79\"}}]}, {\"textRuns\": [{\"value\": \"Who is about to stop buying, and how much revenue is at risk? (snapshot 30-Jun-2025)\", \"textStyle\": {\"fontSize\": \"11pt\", \"color\": \"#605E5C\"}}]}]}}]}, \"vcObjects\": {\"background\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"false\"}}}}}], \"dropShadow\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"false\"}}}}}]}}}",
+          "filters": "[]"
+        },
+        {
+          "x": 20,
+          "y": 86,
+          "z": 0,
+          "width": 300,
+          "height": 94,
+          "config": "{\"name\": \"ch_scored\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 20, \"y\": 86, \"z\": 0, \"width\": 300, \"height\": 94}}], \"singleVisual\": {\"visualType\": \"card\", \"drillFilterOtherVisuals\": true, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"c\", \"Entity\": \"customer_scores\", \"Type\": 0}], \"Select\": [{\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"c\"}}, \"Property\": \"Customers Scored\"}, \"Name\": \"customer_scores.Customers Scored\"}]}, \"projections\": {\"Values\": [{\"queryRef\": \"customer_scores.Customers Scored\"}]}, \"objects\": {\"categoryLabels\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"false\"}}}}}]}, \"vcObjects\": {\"title\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"true\"}}}, \"text\": {\"expr\": {\"Literal\": {\"Value\": \"'Active customers scored'\"}}}}}]}}}",
+          "filters": "[]"
+        },
+        {
+          "x": 333,
+          "y": 86,
+          "z": 0,
+          "width": 300,
+          "height": 94,
+          "config": "{\"name\": \"ch_high\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 333, \"y\": 86, \"z\": 0, \"width\": 300, \"height\": 94}}], \"singleVisual\": {\"visualType\": \"card\", \"drillFilterOtherVisuals\": true, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"c\", \"Entity\": \"customer_scores\", \"Type\": 0}], \"Select\": [{\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"c\"}}, \"Property\": \"High Risk %\"}, \"Name\": \"customer_scores.High Risk %\"}]}, \"projections\": {\"Values\": [{\"queryRef\": \"customer_scores.High Risk %\"}]}, \"objects\": {\"categoryLabels\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"false\"}}}}}]}, \"vcObjects\": {\"title\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"true\"}}}, \"text\": {\"expr\": {\"Literal\": {\"Value\": \"'High churn risk'\"}}}}}]}}}",
+          "filters": "[]"
+        },
+        {
+          "x": 646,
+          "y": 86,
+          "z": 0,
+          "width": 300,
+          "height": 94,
+          "config": "{\"name\": \"ch_rev\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 646, \"y\": 86, \"z\": 0, \"width\": 300, \"height\": 94}}], \"singleVisual\": {\"visualType\": \"card\", \"drillFilterOtherVisuals\": true, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"c\", \"Entity\": \"customer_scores\", \"Type\": 0}], \"Select\": [{\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"c\"}}, \"Property\": \"Revenue at Risk\"}, \"Name\": \"customer_scores.Revenue at Risk\"}]}, \"projections\": {\"Values\": [{\"queryRef\": \"customer_scores.Revenue at Risk\"}]}, \"objects\": {\"categoryLabels\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"false\"}}}}}]}, \"vcObjects\": {\"title\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"true\"}}}, \"text\": {\"expr\": {\"Literal\": {\"Value\": \"'Revenue at risk (12-month spend)'\"}}}}}]}}}",
+          "filters": "[]"
+        },
+        {
+          "x": 960,
+          "y": 86,
+          "z": 0,
+          "width": 300,
+          "height": 94,
+          "config": "{\"name\": \"ch_obs\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 960, \"y\": 86, \"z\": 0, \"width\": 300, \"height\": 94}}], \"singleVisual\": {\"visualType\": \"card\", \"drillFilterOtherVisuals\": true, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"c\", \"Entity\": \"customer_scores\", \"Type\": 0}], \"Select\": [{\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"c\"}}, \"Property\": \"Observed Churn %\"}, \"Name\": \"customer_scores.Observed Churn %\"}]}, \"projections\": {\"Values\": [{\"queryRef\": \"customer_scores.Observed Churn %\"}]}, \"objects\": {\"categoryLabels\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"false\"}}}}}]}, \"vcObjects\": {\"title\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"true\"}}}, \"text\": {\"expr\": {\"Literal\": {\"Value\": \"'Observed churn, Jul-Dec 2025'\"}}}}}]}}}",
+          "filters": "[]"
+        },
+        {
+          "x": 20,
+          "y": 190,
+          "z": 0,
+          "width": 400,
+          "height": 250,
+          "config": "{\"name\": \"ch_risk\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 20, \"y\": 190, \"z\": 0, \"width\": 400, \"height\": 250}}], \"singleVisual\": {\"visualType\": \"clusteredColumnChart\", \"drillFilterOtherVisuals\": true, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"c\", \"Entity\": \"customer_scores\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"c\"}}, \"Property\": \"churn_risk\"}, \"Name\": \"customer_scores.churn_risk\"}, {\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"c\"}}, \"Property\": \"Customers Scored\"}, \"Name\": \"customer_scores.Customers Scored\"}]}, \"projections\": {\"Category\": [{\"queryRef\": \"customer_scores.churn_risk\"}], \"Y\": [{\"queryRef\": \"customer_scores.Customers Scored\"}]}, \"vcObjects\": {\"title\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"true\"}}}, \"text\": {\"expr\": {\"Literal\": {\"Value\": \"'Customers by predicted risk band'\"}}}}}]}}}",
+          "filters": "[]"
+        },
+        {
+          "x": 440,
+          "y": 190,
+          "z": 0,
+          "width": 400,
+          "height": 250,
+          "config": "{\"name\": \"ch_segment\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 440, \"y\": 190, \"z\": 0, \"width\": 400, \"height\": 250}}], \"singleVisual\": {\"visualType\": \"clusteredBarChart\", \"drillFilterOtherVisuals\": true, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"c\", \"Entity\": \"customer_scores\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"c\"}}, \"Property\": \"segment\"}, \"Name\": \"customer_scores.segment\"}, {\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"c\"}}, \"Property\": \"Observed Churn %\"}, \"Name\": \"customer_scores.Observed Churn %\"}], \"OrderBy\": [{\"Direction\": 2, \"Expression\": {\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"c\"}}, \"Property\": \"Observed Churn %\"}}}]}, \"projections\": {\"Category\": [{\"queryRef\": \"customer_scores.segment\"}], \"Y\": [{\"queryRef\": \"customer_scores.Observed Churn %\"}]}, \"vcObjects\": {\"title\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"true\"}}}, \"text\": {\"expr\": {\"Literal\": {\"Value\": \"'Observed churn by RFM segment'\"}}}}}]}}}",
+          "filters": "[]"
+        },
+        {
+          "x": 860,
+          "y": 190,
+          "z": 0,
+          "width": 400,
+          "height": 512,
+          "config": "{\"name\": \"ch_top\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 860, \"y\": 190, \"z\": 0, \"width\": 400, \"height\": 512}}], \"singleVisual\": {\"visualType\": \"tableEx\", \"drillFilterOtherVisuals\": true, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"c\", \"Entity\": \"customer_scores\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"c\"}}, \"Property\": \"customer_id\"}, \"Name\": \"customer_scores.customer_id\"}, {\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"c\"}}, \"Property\": \"segment\"}, \"Name\": \"customer_scores.segment\"}, {\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"c\"}}, \"Property\": \"churn_probability\"}, \"Name\": \"customer_scores.churn_probability\"}, {\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"c\"}}, \"Property\": \"recency_days\"}, \"Name\": \"customer_scores.recency_days\"}, {\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"c\"}}, \"Property\": \"monetary\"}, \"Name\": \"customer_scores.monetary\"}], \"OrderBy\": [{\"Direction\": 2, \"Expression\": {\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"c\"}}, \"Property\": \"churn_probability\"}}}]}, \"projections\": {\"Values\": [{\"queryRef\": \"customer_scores.customer_id\"}, {\"queryRef\": \"customer_scores.segment\"}, {\"queryRef\": \"customer_scores.churn_probability\"}, {\"queryRef\": \"customer_scores.recency_days\"}, {\"queryRef\": \"customer_scores.monetary\"}]}, \"vcObjects\": {\"title\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"true\"}}}, \"text\": {\"expr\": {\"Literal\": {\"Value\": \"'Highest-risk customers (sorted by churn probability)'\"}}}}}]}}}",
+          "filters": "[]"
+        },
+        {
+          "x": 20,
+          "y": 454,
+          "z": 0,
+          "width": 820,
+          "height": 248,
+          "config": "{\"name\": \"ch_cohort\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 20, \"y\": 454, \"z\": 0, \"width\": 820, \"height\": 248}}], \"singleVisual\": {\"visualType\": \"pivotTable\", \"drillFilterOtherVisuals\": true, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"r\", \"Entity\": \"cohort_retention\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"r\"}}, \"Property\": \"cohort\"}, \"Name\": \"cohort_retention.cohort\"}, {\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"r\"}}, \"Property\": \"months_since_first\"}, \"Name\": \"cohort_retention.months_since_first\"}, {\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"r\"}}, \"Property\": \"Retention %\"}, \"Name\": \"cohort_retention.Retention %\"}]}, \"projections\": {\"Rows\": [{\"queryRef\": \"cohort_retention.cohort\"}], \"Columns\": [{\"queryRef\": \"cohort_retention.months_since_first\"}], \"Values\": [{\"queryRef\": \"cohort_retention.Retention %\"}]}, \"objects\": {\"values\": [{\"properties\": {\"backColor\": {\"solid\": {\"color\": {\"expr\": {\"FillRule\": {\"Input\": {\"Measure\": {\"Expression\": {\"SourceRef\": {\"Entity\": \"cohort_retention\"}}, \"Property\": \"Retention %\"}}, \"FillRule\": {\"linearGradient2\": {\"min\": {\"color\": {\"Literal\": {\"Value\": \"'#FFFFFF'\"}}}, \"max\": {\"color\": {\"Literal\": {\"Value\": \"'#1F4E79'\"}}}, \"nullColoringStrategy\": {\"strategy\": {\"Literal\": {\"Value\": \"'asZero'\"}}}}}}}}}}}, \"selector\": {\"data\": [{\"dataViewWildcard\": {\"matchingOption\": 1}}], \"metadata\": \"cohort_retention.Retention %\"}}]}, \"vcObjects\": {\"title\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"true\"}}}, \"text\": {\"expr\": {\"Literal\": {\"Value\": \"'Cohort retention: % of each quarter's new customers still buying N months later'\"}}}}}]}}}",
+          "filters": "[]"
+        }
+      ]
     }
   ],
   "filters": "[]"

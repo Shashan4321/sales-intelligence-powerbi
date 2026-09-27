@@ -9,4 +9,5 @@ data/
 # Power BI local artefacts
 **/.pbi/localSettings.json
 **/.pbi/cache.abf
+**/.pbi/editorSettings.json
 *.pbix
