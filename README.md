@@ -1,10 +1,12 @@
 # Sales Intelligence: Power BI + SQL + Customer Analytics
 
-**End-to-end retail analytics: a SQL-built star schema, a source-controlled Power BI semantic model (TMDL: 26 DAX measures, time-intelligence calculation group, dynamic RLS), and customer analytics (cohorts, RFM, churn prediction with SHAP).**
+**End-to-end retail analytics: a SQL-built star schema, a source-controlled Power BI project (TMDL model with 33 DAX measures, time-intelligence calculation group and dynamic RLS, plus two report pages generated from code), and customer analytics (cohorts, RFM, churn prediction with SHAP).**
+
+![Executive Sales Overview, Power BI](docs/img/powerbi_executive_overview.png)
 
 [![CI](https://github.com/Shashan4321/sales-intelligence-powerbi/actions/workflows/ci.yml/badge.svg)](https://github.com/Shashan4321/sales-intelligence-powerbi/actions/workflows/ci.yml)
 ![Power BI](https://img.shields.io/badge/Power%20BI-PBIP%20%2F%20TMDL-F2C811?logo=powerbi&logoColor=black)
-![DAX](https://img.shields.io/badge/DAX-26%20measures-F2C811)
+![DAX](https://img.shields.io/badge/DAX-33%20measures-F2C811)
 ![SQL](https://img.shields.io/badge/SQL-DuckDB%20%7C%20sqlfluff-4479A1)
 ![Python](https://img.shields.io/badge/Python-scikit--learn%20%7C%20SHAP-3776AB?logo=python&logoColor=white)
 ![License](https://img.shields.io/badge/License-MIT-green)
@@ -27,7 +29,7 @@ flowchart LR
     D --> Q{04_quality_checks.sql<br/>row counts, orphans,<br/>revenue reconciliation}
     F --> Q
     Q -- all 0 --> G[(Gold CSVs)]
-    G --> PBI[Power BI semantic model<br/>TMDL · 26 measures ·<br/>calc group · RLS]
+    G --> PBI[Power BI semantic model<br/>TMDL · 33 measures ·<br/>calc group · RLS<br/>+ 2 report pages]
     G --> CA[Customer analytics<br/>cohorts · RFM · churn + SHAP]
 ```
 
@@ -53,7 +55,8 @@ The model is stored as text in [`powerbi/SalesIntelligence.SemanticModel`](power
 
 | Area | What's in it |
 |---|---|
-| **Measures (26)** | Revenue, cost, margin %, orders, AOV, units, return rate, discount %, active & new customers, revenue per customer. Full list with DAX: [`docs/dax_measures.md`](docs/dax_measures.md) |
+| **Sales measures (26)** | Revenue, cost, margin %, orders, AOV, units, return rate, discount %, active & new customers, revenue per customer. Full list with DAX: [`docs/dax_measures.md`](docs/dax_measures.md) |
+| **Churn measures (7)** | Customers scored, high-risk count and %, average churn probability, observed churn %, revenue at risk, cohort retention % (tables `customer_scores` and `cohort_retention`, exported by `make customers`) |
 | **Time intelligence** | PY, YoY %, PM, MoM %, MTD, QTD, YTD, **FYTD (Indian FY, April-March)**, running total, 3-month rolling average |
 | **Calculation group** | `Time Intelligence`: Current / PY / YoY / YoY % / MTD / QTD / YTD / FYTD, applied to any measure |
 | **Ranking & drill-down** | Category and city rank, dynamic Top N (what-if parameter), share of parent across the **Country → State → City → Store** hierarchy |
@@ -72,7 +75,19 @@ Revenue FYTD = TOTALYTD ( [Total Revenue], dim_date[date], "31/3" )   -- Indian 
 
 **Validating the DAX.** [`reports/expected_measure_values.md`](reports/expected_measure_values.md) lists the value each measure should show for a given filter, computed independently in SQL (e.g. Total Revenue 2025 = ₹1,584,825,489; YoY = 32.1%; FYTD FY2025 = ₹1,306,245,651). Put the measure on a card with the same filter; the numbers must match.
 
-**Open it:** run `make all`, set the `DataFolder` parameter to your `data/gold/` path, open `powerbi/SalesIntelligence.pbip` in Power BI Desktop and refresh. **Next step (in progress):** report pages for Executive overview, Geography drill-down, Category & product and Customers, built on this model. Screenshots and a Publish-to-web link will be added here once they are done.
+## Power BI report
+
+Two pages, refreshed in Power BI Desktop from the gold CSVs. The layout is generated from code by [`powerbi/build_report.py`](powerbi/build_report.py), so it is reviewable in a diff, and a test checks that every field a visual uses exists in the model. The colours come from the portfolio theme in [`powerbi/theme`](powerbi/theme).
+
+**Executive Sales Overview** (screenshot above): fiscal-year slicer (FY2025 selected), net revenue, orders, AOV and YoY cards, monthly revenue vs last year, Country → State → City matrix with share of parent, channel mix and revenue by category.
+
+**Customer Churn**: customers scored at the 30-Jun-2025 snapshot, high-risk share, revenue at risk (12-month spend of high-risk customers), observed churn, customers by risk band, churn by RFM segment, cohort retention heatmap and the highest-risk customers.
+
+![Customer Churn, Power BI](docs/img/powerbi_customer_churn.png)
+
+**Checked against SQL.** FY2025 net revenue on the report, ₹1,30,62,45,651, is exactly the SQL-computed FYTD FY2025 value in [`reports/expected_measure_values.md`](reports/expected_measure_values.md). Of the customers the model rates *High* risk, 95% did not buy again in Jul-Dec 2025, against 6% of *Low* risk customers. These scores include the model's own training customers, so read them as a ranking check, not as test accuracy (test-set results are in the churn table below).
+
+**Open it:** run `make all`, then open `powerbi/SalesIntelligence.pbip` in Power BI Desktop and click **Refresh**. The `DataFolder` parameter defaults to `C:\sales-intelligence-powerbi\data\gold\`; change it under *Transform data → Edit parameters* if your gold CSVs are elsewhere. To change the layout, edit `build_report.py` and run `python powerbi/build_report.py` with Power BI Desktop closed.
 
 ## Customer analytics
 
@@ -116,7 +131,7 @@ git clone https://github.com/Shashan4321/sales-intelligence-powerbi.git
 cd sales-intelligence-powerbi
 pip install -r requirements-dev.txt
 make all     # generate -> SQL ETL + quality checks -> customer analytics -> expected DAX values
-make test    # 7 tests: quality checks, grain, TMDL-vs-data consistency, churn model
+make test    # 10 tests: quality checks, grain, TMDL-vs-data consistency, churn model, report layout
 make lint    # ruff + sqlfluff
 ```
 
@@ -131,8 +146,11 @@ make lint    # ruff + sqlfluff
 │   └── expected.py                    # SQL-computed expected values for the DAX measures
 ├── powerbi/
 │   ├── SalesIntelligence.pbip
+│   ├── build_report.py                # generates the two report pages (report.json)
+│   ├── theme/portfolio-theme.json
+│   ├── SalesIntelligence.Report/      # report pages + registered theme
 │   └── SalesIntelligence.SemanticModel/definition/
-│       ├── tables/*.tmdl              # columns, 26 measures, Top N, calculation group
+│       ├── tables/*.tmdl              # columns, 33 measures, churn scores, Top N, calculation group
 │       ├── relationships.tmdl
 │       └── roles/*.tmdl               # dynamic + static RLS
 ├── docs/dax_measures.md               # every measure with DAX + description
