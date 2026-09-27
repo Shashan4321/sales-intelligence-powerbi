@@ -1,9 +1,11 @@
 table dim_date
+	lineageTag: 4994eca2-c317-4f56-9bc0-66bb16480b5d
 	dataCategory: Time
 
 	column date_key
 		dataType: int64
 		isHidden
+		lineageTag: e040f178-15de-4244-ab14-134acfdac887
 		summarizeBy: none
 		sourceColumn: date_key
 
@@ -11,57 +13,72 @@ table dim_date
 		dataType: dateTime
 		isKey
 		formatString: dd-mmm-yyyy
+		lineageTag: 2fa23782-e4ed-4f94-8f29-e6c2de314528
 		summarizeBy: none
 		sourceColumn: date
 
+		annotation UnderlyingDateTimeDataType = Date
+
 	column year
 		dataType: int64
+		lineageTag: de2d689f-ebb3-4adc-88c9-f363ebad2731
 		summarizeBy: none
 		sourceColumn: year
 
 	column quarter
 		dataType: int64
+		lineageTag: 9378a497-d85e-47e3-9570-5ed155167c81
 		summarizeBy: none
 		sourceColumn: quarter
 
 	column month
 		dataType: int64
+		lineageTag: 48614f3b-a3f8-4896-ad85-6eece59b7804
 		summarizeBy: none
 		sourceColumn: month
 
 	column month_name
 		dataType: string
-		sortByColumn: month
+		lineageTag: 4e7d9b36-a231-44cc-bd8d-8008732536c7
 		summarizeBy: none
 		sourceColumn: month_name
+		sortByColumn: month
 
 	column year_month
 		dataType: string
+		lineageTag: 3e6beda6-e45d-4d6d-8360-0558bf6abc3d
 		summarizeBy: none
 		sourceColumn: year_month
 
 	column is_weekend
 		dataType: boolean
+		lineageTag: 3bb4e9c0-c944-4c86-afb7-78b56b36790c
 		summarizeBy: none
 		sourceColumn: is_weekend
 
 	column fiscal_year
 		dataType: int64
+		lineageTag: 8e243f88-99e4-4669-ba82-b89893fd90c4
 		summarizeBy: none
 		sourceColumn: fiscal_year
 
 	hierarchy Calendar
+		lineageTag: 77d5d93d-05a2-4389-ae5c-b9ec720faa2a
 
 		level year
+			lineageTag: 52981b1e-b10e-4e79-86f9-cc6c9163b5e3
 			column: year
 
 		level quarter
+			lineageTag: a8a7b389-d5f6-4146-be34-635bbeb8a9a2
 			column: quarter
 
 		level month_name
+			lineageTag: 25a6c934-0901-4c5a-92ce-f2e432b0e773
 			column: month_name
 
 		level date
+			lineageTag: e579e7a3-ae3a-48c6-819a-b142af6a3557
 			column: date
 
 	partition dim_date = m
@@ -70,7 +87,7 @@ table dim_date
 				let
 				    Source = Csv.Document(File.Contents(DataFolder & "dim_date.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
 				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
-				    Typed = Table.TransformColumnTypes(Promoted, {{"date_key", Int64.Type}, {"date", type date}, {"year", Int64.Type}, {"quarter", Int64.Type}, {"month", Int64.Type}, {"month_name", text}, {"year_month", text}, {"is_weekend", type logical}, {"fiscal_year", Int64.Type}}, "en-US")
+				    Typed = Table.TransformColumnTypes(Promoted, {{"date_key", Int64.Type}, {"date", type date}, {"year", Int64.Type}, {"quarter", Int64.Type}, {"month", Int64.Type}, {"month_name", type text}, {"year_month", type text}, {"is_weekend", type logical}, {"fiscal_year", Int64.Type}}, "en-US")
 				in
 				    Typed
 

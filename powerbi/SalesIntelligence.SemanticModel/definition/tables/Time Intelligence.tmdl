@@ -1,38 +1,33 @@
 table 'Time Intelligence'
+	lineageTag: 07277dae-d81f-4e33-ba87-2a6a4dddef0e
 
 	calculationGroup
 		precedence: 1
 
-		calculationItem 'Current' = SELECTEDMEASURE ()
-			ordinal: 0
+		calculationItem Current = SELECTEDMEASURE ()
 
-		calculationItem 'PY' = CALCULATE ( SELECTEDMEASURE (), SAMEPERIODLASTYEAR ( dim_date[date] ) )
-			ordinal: 1
+		calculationItem PY = CALCULATE ( SELECTEDMEASURE (), SAMEPERIODLASTYEAR ( dim_date[date] ) )
 
-		calculationItem 'YoY' = SELECTEDMEASURE () - CALCULATE ( SELECTEDMEASURE (), SAMEPERIODLASTYEAR ( dim_date[date] ) )
-			ordinal: 2
+		calculationItem YoY = SELECTEDMEASURE () - CALCULATE ( SELECTEDMEASURE (), SAMEPERIODLASTYEAR ( dim_date[date] ) )
 
 		calculationItem 'YoY %' =
 				VAR _py = CALCULATE ( SELECTEDMEASURE (), SAMEPERIODLASTYEAR ( dim_date[date] ) )
 				RETURN
 					DIVIDE ( SELECTEDMEASURE () - _py, _py )
-			ordinal: 3
+
 			formatStringDefinition = "+0.0%;-0.0%;0.0%"
 
-		calculationItem 'MTD' = CALCULATE ( SELECTEDMEASURE (), DATESMTD ( dim_date[date] ) )
-			ordinal: 4
+		calculationItem MTD = CALCULATE ( SELECTEDMEASURE (), DATESMTD ( dim_date[date] ) )
 
-		calculationItem 'QTD' = CALCULATE ( SELECTEDMEASURE (), DATESQTD ( dim_date[date] ) )
-			ordinal: 5
+		calculationItem QTD = CALCULATE ( SELECTEDMEASURE (), DATESQTD ( dim_date[date] ) )
 
-		calculationItem 'YTD' = CALCULATE ( SELECTEDMEASURE (), DATESYTD ( dim_date[date] ) )
-			ordinal: 6
+		calculationItem YTD = CALCULATE ( SELECTEDMEASURE (), DATESYTD ( dim_date[date] ) )
 
-		calculationItem 'FYTD' = CALCULATE ( SELECTEDMEASURE (), DATESYTD ( dim_date[date], "31/3" ) )
-			ordinal: 7
+		calculationItem FYTD = CALCULATE ( SELECTEDMEASURE (), DATESYTD ( dim_date[date], "31/3" ) )
 
 	column 'Time Calculation'
 		dataType: string
+		lineageTag: 6f2c8358-92b3-48ad-a468-93a6728a9cd8
 		summarizeBy: none
 		sourceColumn: Name
 		sortByColumn: Ordinal
@@ -40,6 +35,7 @@ table 'Time Intelligence'
 	column Ordinal
 		dataType: int64
 		isHidden
+		lineageTag: 7aa20990-09a8-4eaf-9acc-7f1e9b1ab332
 		summarizeBy: none
 		sourceColumn: Ordinal
 

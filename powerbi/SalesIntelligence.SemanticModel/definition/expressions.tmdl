@@ -1,5 +1,7 @@
 /// Folder containing the gold CSVs produced by `make etl` (keep the trailing backslash).
 expression DataFolder = "C:\sales-intelligence-powerbi\data\gold\" meta [IsParameterQuery = true, Type = "Text", IsParameterQueryRequired = true]
+	lineageTag: c287d94f-9e41-44ae-b038-014174fb86fa
 	queryGroup: Parameters
 
-queryGroup Parameters
+	annotation PBI_ResultType = Text
+

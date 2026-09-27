@@ -1,24 +1,31 @@
 table dim_customer
+	lineageTag: b3574388-e857-4142-8fcd-0b68df860c61
 
 	column customer_id
 		dataType: string
+		lineageTag: d271abe0-f245-4b52-bfc4-657021199475
 		summarizeBy: none
 		sourceColumn: customer_id
 
 	column segment
 		dataType: string
+		lineageTag: 130bb30c-323d-4ddd-a58d-e201751af15a
 		summarizeBy: none
 		sourceColumn: segment
 
 	column signup_date
 		dataType: dateTime
 		formatString: dd-mmm-yyyy
+		lineageTag: 98a79b50-2e22-4ea3-a5b5-b2cd565be2af
 		summarizeBy: none
 		sourceColumn: signup_date
+
+		annotation UnderlyingDateTimeDataType = Date
 
 	column customer_key
 		dataType: int64
 		isHidden
+		lineageTag: 832ff18d-a2ce-462c-b3d5-74e785ac980b
 		summarizeBy: none
 		sourceColumn: customer_key
 
@@ -28,7 +35,7 @@ table dim_customer
 				let
 				    Source = Csv.Document(File.Contents(DataFolder & "dim_customer.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
 				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
-				    Typed = Table.TransformColumnTypes(Promoted, {{"customer_id", text}, {"segment", text}, {"signup_date", type date}, {"customer_key", Int64.Type}}, "en-US")
+				    Typed = Table.TransformColumnTypes(Promoted, {{"customer_id", type text}, {"segment", type text}, {"signup_date", type date}, {"customer_key", Int64.Type}}, "en-US")
 				in
 				    Typed
 

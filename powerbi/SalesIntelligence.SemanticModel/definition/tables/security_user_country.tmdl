@@ -1,15 +1,18 @@
 table security_user_country
 	isHidden
+	lineageTag: d887de67-342e-4040-8eb5-92d6f41d4a5c
 
 	column user_email
 		dataType: string
 		isHidden
+		lineageTag: ca248220-dfae-4ad6-a2e6-25ffd315fc3d
 		summarizeBy: none
 		sourceColumn: user_email
 
 	column country
 		dataType: string
 		isHidden
+		lineageTag: 451ebb57-4363-489f-8216-ff74b9edba5f
 		summarizeBy: none
 		sourceColumn: country
 
@@ -19,7 +22,7 @@ table security_user_country
 				let
 				    Source = Csv.Document(File.Contents(DataFolder & "security_user_country.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
 				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
-				    Typed = Table.TransformColumnTypes(Promoted, {{"user_email", text}, {"country", text}}, "en-US")
+				    Typed = Table.TransformColumnTypes(Promoted, {{"user_email", type text}, {"country", type text}}, "en-US")
 				in
 				    Typed
 

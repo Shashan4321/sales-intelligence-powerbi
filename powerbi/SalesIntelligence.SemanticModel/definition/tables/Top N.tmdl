@@ -1,11 +1,14 @@
 table 'Top N'
+	lineageTag: 94b8b427-886f-4ff6-8bc8-f9e322bc4d58
 
 	measure 'Top N Value' = SELECTEDVALUE ( 'Top N'[Top N], 5 )
 		formatString: 0
+		lineageTag: 5f32cebb-e9fd-4b19-b0b3-55307f203c50
 
 	column 'Top N'
 		dataType: int64
 		formatString: 0
+		lineageTag: c209c59b-4026-4048-bedf-e6756b90d274
 		summarizeBy: none
 		sourceColumn: [Value]
 

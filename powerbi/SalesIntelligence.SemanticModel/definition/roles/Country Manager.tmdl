@@ -8,3 +8,6 @@ role 'Country Manager'
 					VALUES ( security_user_country[country] ),
 					security_user_country[user_email] = USERPRINCIPALNAME ()
 				)
+
+	annotation PBI_Id = a0a30f2ae30f4251ab7da44174e2a772
+

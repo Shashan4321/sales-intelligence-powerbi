@@ -3,3 +3,6 @@ role 'India Only'
 	modelPermission: read
 
 	tablePermission dim_store = dim_store[country] = "India"
+
+	annotation PBI_Id = 1564c1d03cd141e0b18843106725cd94
+

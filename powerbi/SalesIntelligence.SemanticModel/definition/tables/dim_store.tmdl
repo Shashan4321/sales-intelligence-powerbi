@@ -1,51 +1,63 @@
 table dim_store
+	lineageTag: 281d15c6-9414-4e13-bf18-a3cfe7b32d07
 
 	column store_name
 		dataType: string
+		lineageTag: 2aa488c1-f2bd-4469-b8a7-506fb0eeeaa5
 		summarizeBy: none
 		sourceColumn: store_name
 
 	column city
 		dataType: string
-		summarizeBy: none
+		lineageTag: 07a2912d-9025-455c-914b-513342ce11d3
 		dataCategory: City
+		summarizeBy: none
 		sourceColumn: city
 
 	column state
 		dataType: string
-		summarizeBy: none
+		lineageTag: f38433da-fcfe-4437-893c-20698c4a261d
 		dataCategory: StateOrProvince
+		summarizeBy: none
 		sourceColumn: state
 
 	column country
 		dataType: string
-		summarizeBy: none
+		lineageTag: 083631ba-3bb8-4f6e-9f72-43180d7242fb
 		dataCategory: Country
+		summarizeBy: none
 		sourceColumn: country
 
 	column region
 		dataType: string
+		lineageTag: 089ee5b2-c66a-46ab-ab8c-883d4985051c
 		summarizeBy: none
 		sourceColumn: region
 
 	column store_key
 		dataType: int64
 		isHidden
+		lineageTag: d719cab8-fa41-4731-b216-1392ae4bef1c
 		summarizeBy: none
 		sourceColumn: store_key
 
 	hierarchy Geography
+		lineageTag: 69235203-6556-4131-b5a9-680f45ea53cf
 
 		level country
+			lineageTag: c16956ae-579a-499d-ae53-c5f44f7da153
 			column: country
 
 		level state
+			lineageTag: 996927bd-e363-4e8d-a6d5-7365ced99c13
 			column: state
 
 		level city
+			lineageTag: a039021a-45a0-47e9-8c09-c9bb1af39f4a
 			column: city
 
 		level store_name
+			lineageTag: 05ecb699-f519-4810-9924-1c690e9b1701
 			column: store_name
 
 	partition dim_store = m
@@ -54,7 +66,7 @@ table dim_store
 				let
 				    Source = Csv.Document(File.Contents(DataFolder & "dim_store.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
 				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
-				    Typed = Table.TransformColumnTypes(Promoted, {{"store_name", text}, {"city", text}, {"state", text}, {"country", text}, {"region", text}, {"store_key", Int64.Type}}, "en-US")
+				    Typed = Table.TransformColumnTypes(Promoted, {{"store_name", type text}, {"city", type text}, {"state", type text}, {"country", type text}, {"region", type text}, {"store_key", Int64.Type}}, "en-US")
 				in
 				    Typed
 

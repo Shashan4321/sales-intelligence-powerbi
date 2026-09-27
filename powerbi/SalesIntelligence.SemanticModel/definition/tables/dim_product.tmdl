@@ -1,51 +1,63 @@
 table dim_product
+	lineageTag: 4b95137a-8d01-4458-9569-dd026bded71c
 
 	column sku
 		dataType: string
+		lineageTag: 3ec5280f-94e1-4777-aa54-b45b990fbb2a
 		summarizeBy: none
 		sourceColumn: sku
 
 	column product_name
 		dataType: string
+		lineageTag: 3076cf01-ba11-4a0f-b713-40fbf2f0b4d8
 		summarizeBy: none
 		sourceColumn: product_name
 
 	column category
 		dataType: string
+		lineageTag: 0cb0c908-bf5a-4165-8c2e-4c688cf13f52
 		summarizeBy: none
 		sourceColumn: category
 
 	column subcategory
 		dataType: string
+		lineageTag: 7da4ffb4-e71b-4473-8551-b407211ad529
 		summarizeBy: none
 		sourceColumn: subcategory
 
 	column brand
 		dataType: string
+		lineageTag: 73aa26ed-4fe9-4cd1-8f93-f1e2fc6a68ed
 		summarizeBy: none
 		sourceColumn: brand
 
 	column list_price
 		dataType: decimal
 		formatString: #,0.00
+		lineageTag: b7b8be7f-1836-4ae4-ba8b-b5e08ce16f81
 		summarizeBy: none
 		sourceColumn: list_price
 
 	column product_key
 		dataType: int64
 		isHidden
+		lineageTag: a47d1a9c-2a7e-4282-ac2d-620af3fde0ab
 		summarizeBy: none
 		sourceColumn: product_key
 
 	hierarchy Product
+		lineageTag: 9af5cf5f-c403-4cf3-b3a0-008ab9b9ee55
 
 		level category
+			lineageTag: 0947521e-c682-4954-a932-79de40a6120a
 			column: category
 
 		level subcategory
+			lineageTag: e484b0af-9538-49c6-8b47-c614b4ae272d
 			column: subcategory
 
 		level product_name
+			lineageTag: 1868d106-697c-4a7f-a3c8-46c43a44fd14
 			column: product_name
 
 	partition dim_product = m
@@ -54,7 +66,7 @@ table dim_product
 				let
 				    Source = Csv.Document(File.Contents(DataFolder & "dim_product.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
 				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
-				    Typed = Table.TransformColumnTypes(Promoted, {{"sku", text}, {"product_name", text}, {"category", text}, {"subcategory", text}, {"brand", text}, {"list_price", Currency.Type}, {"product_key", Int64.Type}}, "en-US")
+				    Typed = Table.TransformColumnTypes(Promoted, {{"sku", type text}, {"product_name", type text}, {"category", type text}, {"subcategory", type text}, {"brand", type text}, {"list_price", Currency.Type}, {"product_key", Int64.Type}}, "en-US")
 				in
 				    Typed
 

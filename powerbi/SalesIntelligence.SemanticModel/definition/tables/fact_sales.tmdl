@@ -1,44 +1,53 @@
 table fact_sales
+	lineageTag: b6451166-afec-4f81-80a6-49ce31a1c310
 
 	/// Net revenue after discounts, excluding returned lines.
 	measure 'Total Revenue' = CALCULATE ( SUM ( fact_sales[net_revenue] ), fact_sales[is_returned] = FALSE () )
 		formatString: ₹ #,0
 		displayFolder: Sales
+		lineageTag: 84a7bf09-05b3-49d4-b08b-c89eb3bb2580
 
 	/// Cost of goods for non-returned lines.
 	measure 'Total Cost' = CALCULATE ( SUM ( fact_sales[cost] ), fact_sales[is_returned] = FALSE () )
 		formatString: ₹ #,0
 		displayFolder: Sales
+		lineageTag: e03fe539-f705-47a1-a552-ab22040ae0da
 
 	/// Revenue minus cost.
 	measure 'Gross Margin' = [Total Revenue] - [Total Cost]
 		formatString: ₹ #,0
 		displayFolder: Profitability
+		lineageTag: 87b34d16-9bfb-421c-91df-5de47d535d27
 
 	/// Gross margin as a share of revenue.
 	measure 'Gross Margin %' = DIVIDE ( [Gross Margin], [Total Revenue] )
 		formatString: 0.0%
 		displayFolder: Profitability
+		lineageTag: 4bc54c3c-7aef-444e-af2a-3b7dc85be199
 
 	/// Distinct orders with at least one kept line.
-	measure 'Orders' = CALCULATE ( DISTINCTCOUNT ( fact_sales[order_id] ), fact_sales[is_returned] = FALSE () )
+	measure Orders = CALCULATE ( DISTINCTCOUNT ( fact_sales[order_id] ), fact_sales[is_returned] = FALSE () )
 		formatString: #,0
 		displayFolder: Sales
+		lineageTag: e9c5f086-0f0f-4e78-9c4d-5f3f8b03ffbb
 
 	/// Units on non-returned lines.
 	measure 'Units Sold' = CALCULATE ( SUM ( fact_sales[quantity] ), fact_sales[is_returned] = FALSE () )
 		formatString: #,0
 		displayFolder: Sales
+		lineageTag: 41808dc6-56b8-4dd9-acb6-3bdea5686566
 
 	/// Customers who bought in the selected period.
 	measure 'Active Customers' = CALCULATE ( DISTINCTCOUNT ( fact_sales[customer_key] ), fact_sales[is_returned] = FALSE () )
 		formatString: #,0
 		displayFolder: Customers
+		lineageTag: c7d8d56c-1804-4df5-816a-660d5b4cb868
 
 	/// Revenue per order.
 	measure 'Avg Order Value' = DIVIDE ( [Total Revenue], [Orders] )
 		formatString: ₹ #,0
 		displayFolder: Sales
+		lineageTag: 4df8f27c-a483-4dac-9343-9e6d72e789fb
 
 	/// Share of order lines returned.
 	measure 'Return Rate %' =
@@ -48,16 +57,19 @@ table fact_sales
 			)
 		formatString: 0.00%
 		displayFolder: Sales
+		lineageTag: 67dda859-43b6-4433-8208-6a868f371e2a
 
 	/// Discount as a share of gross (list) sales.
 	measure 'Discount %' = DIVIDE ( SUM ( fact_sales[discount_amount] ), SUM ( fact_sales[discount_amount] ) + SUM ( fact_sales[net_revenue] ) )
 		formatString: 0.0%
 		displayFolder: Profitability
+		lineageTag: d9d47f92-6c40-40f3-b386-3216abac8b4d
 
 	/// Revenue in the same period last year.
 	measure 'Revenue PY' = CALCULATE ( [Total Revenue], SAMEPERIODLASTYEAR ( dim_date[date] ) )
 		formatString: ₹ #,0
 		displayFolder: Time Intelligence
+		lineageTag: dd1d8685-e96e-44be-8080-b315f40d5b6b
 
 	/// Year-over-year growth; blank when there is no prior-year data.
 	measure 'Revenue YoY %' =
@@ -67,36 +79,43 @@ table fact_sales
 				IF ( NOT ISBLANK ( _py ), DIVIDE ( _cur - _py, _py ) )
 		formatString: +0.0%;-0.0%;0.0%
 		displayFolder: Time Intelligence
+		lineageTag: d0e0f885-a563-4990-8944-90600c7775dd
 
 	/// Revenue in the previous month.
 	measure 'Revenue PM' = CALCULATE ( [Total Revenue], DATEADD ( dim_date[date], -1, MONTH ) )
 		formatString: ₹ #,0
 		displayFolder: Time Intelligence
+		lineageTag: 7126b3f1-c6e4-4402-97bd-1bb51ab65e98
 
 	/// Month-over-month growth.
 	measure 'Revenue MoM %' = DIVIDE ( [Total Revenue] - [Revenue PM], [Revenue PM] )
 		formatString: +0.0%;-0.0%;0.0%
 		displayFolder: Time Intelligence
+		lineageTag: e66a3f1d-9971-4d54-8f1f-b2829ef757a0
 
 	/// Month to date.
 	measure 'Revenue MTD' = TOTALMTD ( [Total Revenue], dim_date[date] )
 		formatString: ₹ #,0
 		displayFolder: Time Intelligence
+		lineageTag: 505865d8-7505-4a89-9c73-a00fee07e26a
 
 	/// Quarter to date.
 	measure 'Revenue QTD' = TOTALQTD ( [Total Revenue], dim_date[date] )
 		formatString: ₹ #,0
 		displayFolder: Time Intelligence
+		lineageTag: 5f5c8f25-b23c-4dc1-b022-baa229eb6836
 
 	/// Calendar year to date.
 	measure 'Revenue YTD' = TOTALYTD ( [Total Revenue], dim_date[date] )
 		formatString: ₹ #,0
 		displayFolder: Time Intelligence
+		lineageTag: c6d67201-d815-42fb-a1c8-522a2c74d6dc
 
 	/// Indian financial year to date (April-March).
 	measure 'Revenue FYTD' = TOTALYTD ( [Total Revenue], dim_date[date], "31/3" )
 		formatString: ₹ #,0
 		displayFolder: Time Intelligence
+		lineageTag: 57a0516c-5347-4da5-96aa-02f31bc29ff4
 
 	/// Cumulative revenue from the first date up to the current context.
 	measure 'Revenue Running Total' =
@@ -105,6 +124,7 @@ table fact_sales
 				CALCULATE ( [Total Revenue], dim_date[date] <= _maxDate, REMOVEFILTERS ( dim_date ) )
 		formatString: ₹ #,0
 		displayFolder: Time Intelligence
+		lineageTag: f90a9541-bd39-4298-beed-45f37e0ad11f
 
 	/// Average monthly revenue over the last 3 months.
 	measure 'Revenue 3M Rolling Avg' =
@@ -114,6 +134,7 @@ table fact_sales
 				DIVIDE ( CALCULATE ( [Total Revenue], _months ), 3 )
 		formatString: ₹ #,0
 		displayFolder: Time Intelligence
+		lineageTag: 88a17efc-d204-4f64-ae41-38c1edbbc1a8
 
 	/// Rank of the category by revenue, respecting other filters.
 	measure 'Category Rank' =
@@ -123,6 +144,7 @@ table fact_sales
 			)
 		formatString: 0
 		displayFolder: Ranking
+		lineageTag: 27638e0e-1caa-45df-8f61-ae905f9030ec
 
 	/// Rank of the city within the current selection.
 	measure 'City Rank' =
@@ -132,6 +154,7 @@ table fact_sales
 			)
 		formatString: 0
 		displayFolder: Ranking
+		lineageTag: 7194e768-cfa0-47b1-8ac6-08cde7068e35
 
 	/// Revenue shown only for the top N categories (N from the what-if slicer).
 	measure 'Top N Revenue' =
@@ -140,6 +163,7 @@ table fact_sales
 				IF ( [Category Rank] <= _n, [Total Revenue] )
 		formatString: ₹ #,0
 		displayFolder: Ranking
+		lineageTag: 4c841276-029f-4232-945a-e3eff3b7fb0b
 
 	/// Share of the level above in the Country > State > City > Store drill-down.
 	measure 'Revenue Share of Parent' =
@@ -155,6 +179,7 @@ table fact_sales
 				DIVIDE ( [Total Revenue], _all )
 		formatString: 0.0%
 		displayFolder: Ranking
+		lineageTag: 8bee281b-09fb-450c-a7ee-4c5259ee2507
 
 	/// Customers whose first-ever purchase falls in the selected period.
 	measure 'New Customers' =
@@ -170,71 +195,84 @@ table fact_sales
 				)
 		formatString: #,0
 		displayFolder: Customers
+		lineageTag: 77f7f946-dede-44f5-8d88-74be33f2a4a4
 
 	/// Average revenue per buying customer.
 	measure 'Revenue per Customer' = DIVIDE ( [Total Revenue], [Active Customers] )
 		formatString: ₹ #,0
 		displayFolder: Customers
+		lineageTag: fb7caaf7-2ff2-4966-a39e-ed974df52cbd
 
 	column order_id
 		dataType: string
+		lineageTag: 11be9f53-a5db-48a6-896f-f8d318878660
 		summarizeBy: none
 		sourceColumn: order_id
 
 	column customer_key
 		dataType: int64
 		isHidden
+		lineageTag: 8d230a34-ade3-434c-90d1-2f0b5a3f2cb8
 		summarizeBy: none
 		sourceColumn: customer_key
 
 	column store_key
 		dataType: int64
 		isHidden
+		lineageTag: 78d2788d-0015-4c17-b55c-5f96cede70e6
 		summarizeBy: none
 		sourceColumn: store_key
 
 	column product_key
 		dataType: int64
 		isHidden
+		lineageTag: 6bb6edba-4007-431a-86c0-3e66b309a24e
 		summarizeBy: none
 		sourceColumn: product_key
 
 	column channel
 		dataType: string
+		lineageTag: af9124fc-5f2c-436d-a124-7675c65cb898
 		summarizeBy: none
 		sourceColumn: channel
 
 	column quantity
 		dataType: int64
+		lineageTag: eb8ab879-fd59-43c8-87ca-2dfb9192e054
 		summarizeBy: sum
 		sourceColumn: quantity
 
 	column unit_price
 		dataType: decimal
 		formatString: #,0.00
+		lineageTag: cfd554fc-8a0e-4180-86d9-4ac89948d4e2
 		summarizeBy: none
 		sourceColumn: unit_price
 
 	column discount_pct
 		dataType: decimal
 		formatString: 0.0%
+		lineageTag: 79ec3a99-7ed7-4eed-8353-9c724d765a81
 		summarizeBy: none
 		sourceColumn: discount_pct
 
 	column is_returned
 		dataType: boolean
+		lineageTag: 73dd5c11-57bb-4782-8f17-2d34e6c92b3e
 		summarizeBy: none
 		sourceColumn: is_returned
 
 	column date_key
 		dataType: int64
 		isHidden
+		lineageTag: 0deeeba7-bada-48bc-af77-42c4920803f3
 		summarizeBy: none
 		sourceColumn: date_key
 
 	column net_revenue
 		dataType: decimal
 		formatString: #,0.00
+		lineageTag: 25c8f92e-3cb8-484d-aa0b-0ad26ffd7f34
 		summarizeBy: sum
 		sourceColumn: net_revenue
 
@@ -242,12 +280,14 @@ table fact_sales
 		dataType: decimal
 		isHidden
 		formatString: #,0.00
+		lineageTag: 683afe50-a552-46ee-b3f8-96373adcd9f7
 		summarizeBy: sum
 		sourceColumn: discount_amount
 
 	column cost
 		dataType: decimal
 		formatString: #,0.00
+		lineageTag: b17388b8-2742-48f9-8652-75947ce0a0ce
 		summarizeBy: sum
 		sourceColumn: cost
 
@@ -257,7 +297,7 @@ table fact_sales
 				let
 				    Source = Csv.Document(File.Contents(DataFolder & "fact_sales.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
 				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
-				    Typed = Table.TransformColumnTypes(Promoted, {{"order_id", text}, {"customer_key", Int64.Type}, {"store_key", Int64.Type}, {"product_key", Int64.Type}, {"channel", text}, {"quantity", Int64.Type}, {"unit_price", Currency.Type}, {"discount_pct", Currency.Type}, {"is_returned", type logical}, {"date_key", Int64.Type}, {"net_revenue", Currency.Type}, {"discount_amount", Currency.Type}, {"cost", Currency.Type}}, "en-US")
+				    Typed = Table.TransformColumnTypes(Promoted, {{"order_id", type text}, {"customer_key", Int64.Type}, {"store_key", Int64.Type}, {"product_key", Int64.Type}, {"channel", type text}, {"quantity", Int64.Type}, {"unit_price", Currency.Type}, {"discount_pct", Currency.Type}, {"is_returned", type logical}, {"date_key", Int64.Type}, {"net_revenue", Currency.Type}, {"discount_amount", Currency.Type}, {"cost", Currency.Type}}, "en-US")
 				in
 				    Typed
 
