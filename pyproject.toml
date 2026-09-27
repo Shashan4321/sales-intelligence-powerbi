@@ -1,0 +1,21 @@
+[project]
+name = "sales-intelligence-powerbi"
+version = "0.1.0"
+description = "Retail sales intelligence: SQL star-schema ETL, Power BI semantic model in TMDL (DAX, RLS, calculation groups) and customer analytics (cohorts, RFM, churn + SHAP)."
+requires-python = ">=3.10"
+dependencies = ["duckdb>=1.1", "pandas>=2.1", "numpy>=1.26", "scikit-learn>=1.4", "shap>=0.45", "matplotlib>=3.8"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "ruff>=0.6", "sqlfluff>=3", "pre-commit>=3"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 110
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+ignore = ["N806"]

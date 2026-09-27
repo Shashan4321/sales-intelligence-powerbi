@@ -1,0 +1,12 @@
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.ruff_cache/
+.env
+# generated: rebuild with `make all`
+data/
+# Power BI local artefacts
+**/.pbi/localSettings.json
+**/.pbi/cache.abf
+*.pbix
