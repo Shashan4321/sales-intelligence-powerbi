@@ -1,0 +1,15 @@
+table 'Top N'
+
+	measure 'Top N Value' = SELECTEDVALUE ( 'Top N'[Top N], 5 )
+		formatString: 0
+
+	column 'Top N'
+		dataType: int64
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: [Value]
+
+	partition 'Top N' = calculated
+		mode: import
+		source = GENERATESERIES ( 1, 10, 1 )
+

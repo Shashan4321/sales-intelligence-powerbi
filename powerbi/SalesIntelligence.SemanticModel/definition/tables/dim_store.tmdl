@@ -1,0 +1,60 @@
+table dim_store
+
+	column store_name
+		dataType: string
+		summarizeBy: none
+		sourceColumn: store_name
+
+	column city
+		dataType: string
+		summarizeBy: none
+		dataCategory: City
+		sourceColumn: city
+
+	column state
+		dataType: string
+		summarizeBy: none
+		dataCategory: StateOrProvince
+		sourceColumn: state
+
+	column country
+		dataType: string
+		summarizeBy: none
+		dataCategory: Country
+		sourceColumn: country
+
+	column region
+		dataType: string
+		summarizeBy: none
+		sourceColumn: region
+
+	column store_key
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: store_key
+
+	hierarchy Geography
+
+		level country
+			column: country
+
+		level state
+			column: state
+
+		level city
+			column: city
+
+		level store_name
+			column: store_name
+
+	partition dim_store = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "dim_store.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"store_name", text}, {"city", text}, {"state", text}, {"country", text}, {"region", text}, {"store_key", Int64.Type}}, "en-US")
+				in
+				    Typed
+

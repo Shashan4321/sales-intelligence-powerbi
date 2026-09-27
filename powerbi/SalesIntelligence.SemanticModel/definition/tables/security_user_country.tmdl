@@ -1,0 +1,25 @@
+table security_user_country
+	isHidden
+
+	column user_email
+		dataType: string
+		isHidden
+		summarizeBy: none
+		sourceColumn: user_email
+
+	column country
+		dataType: string
+		isHidden
+		summarizeBy: none
+		sourceColumn: country
+
+	partition security_user_country = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "security_user_country.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"user_email", text}, {"country", text}}, "en-US")
+				in
+				    Typed
+

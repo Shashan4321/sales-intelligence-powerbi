@@ -1,0 +1,45 @@
+table 'Time Intelligence'
+
+	calculationGroup
+		precedence: 1
+
+		calculationItem 'Current' = SELECTEDMEASURE ()
+			ordinal: 0
+
+		calculationItem 'PY' = CALCULATE ( SELECTEDMEASURE (), SAMEPERIODLASTYEAR ( dim_date[date] ) )
+			ordinal: 1
+
+		calculationItem 'YoY' = SELECTEDMEASURE () - CALCULATE ( SELECTEDMEASURE (), SAMEPERIODLASTYEAR ( dim_date[date] ) )
+			ordinal: 2
+
+		calculationItem 'YoY %' =
+				VAR _py = CALCULATE ( SELECTEDMEASURE (), SAMEPERIODLASTYEAR ( dim_date[date] ) )
+				RETURN
+					DIVIDE ( SELECTEDMEASURE () - _py, _py )
+			ordinal: 3
+			formatStringDefinition = "+0.0%;-0.0%;0.0%"
+
+		calculationItem 'MTD' = CALCULATE ( SELECTEDMEASURE (), DATESMTD ( dim_date[date] ) )
+			ordinal: 4
+
+		calculationItem 'QTD' = CALCULATE ( SELECTEDMEASURE (), DATESQTD ( dim_date[date] ) )
+			ordinal: 5
+
+		calculationItem 'YTD' = CALCULATE ( SELECTEDMEASURE (), DATESYTD ( dim_date[date] ) )
+			ordinal: 6
+
+		calculationItem 'FYTD' = CALCULATE ( SELECTEDMEASURE (), DATESYTD ( dim_date[date], "31/3" ) )
+			ordinal: 7
+
+	column 'Time Calculation'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: Name
+		sortByColumn: Ordinal
+
+	column Ordinal
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: Ordinal
+

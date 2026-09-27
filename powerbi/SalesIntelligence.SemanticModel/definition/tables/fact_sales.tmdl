@@ -1,0 +1,263 @@
+table fact_sales
+
+	/// Net revenue after discounts, excluding returned lines.
+	measure 'Total Revenue' = CALCULATE ( SUM ( fact_sales[net_revenue] ), fact_sales[is_returned] = FALSE () )
+		formatString: ₹ #,0
+		displayFolder: Sales
+
+	/// Cost of goods for non-returned lines.
+	measure 'Total Cost' = CALCULATE ( SUM ( fact_sales[cost] ), fact_sales[is_returned] = FALSE () )
+		formatString: ₹ #,0
+		displayFolder: Sales
+
+	/// Revenue minus cost.
+	measure 'Gross Margin' = [Total Revenue] - [Total Cost]
+		formatString: ₹ #,0
+		displayFolder: Profitability
+
+	/// Gross margin as a share of revenue.
+	measure 'Gross Margin %' = DIVIDE ( [Gross Margin], [Total Revenue] )
+		formatString: 0.0%
+		displayFolder: Profitability
+
+	/// Distinct orders with at least one kept line.
+	measure 'Orders' = CALCULATE ( DISTINCTCOUNT ( fact_sales[order_id] ), fact_sales[is_returned] = FALSE () )
+		formatString: #,0
+		displayFolder: Sales
+
+	/// Units on non-returned lines.
+	measure 'Units Sold' = CALCULATE ( SUM ( fact_sales[quantity] ), fact_sales[is_returned] = FALSE () )
+		formatString: #,0
+		displayFolder: Sales
+
+	/// Customers who bought in the selected period.
+	measure 'Active Customers' = CALCULATE ( DISTINCTCOUNT ( fact_sales[customer_key] ), fact_sales[is_returned] = FALSE () )
+		formatString: #,0
+		displayFolder: Customers
+
+	/// Revenue per order.
+	measure 'Avg Order Value' = DIVIDE ( [Total Revenue], [Orders] )
+		formatString: ₹ #,0
+		displayFolder: Sales
+
+	/// Share of order lines returned.
+	measure 'Return Rate %' =
+			DIVIDE (
+				CALCULATE ( COUNTROWS ( fact_sales ), fact_sales[is_returned] = TRUE () ),
+				COUNTROWS ( fact_sales )
+			)
+		formatString: 0.00%
+		displayFolder: Sales
+
+	/// Discount as a share of gross (list) sales.
+	measure 'Discount %' = DIVIDE ( SUM ( fact_sales[discount_amount] ), SUM ( fact_sales[discount_amount] ) + SUM ( fact_sales[net_revenue] ) )
+		formatString: 0.0%
+		displayFolder: Profitability
+
+	/// Revenue in the same period last year.
+	measure 'Revenue PY' = CALCULATE ( [Total Revenue], SAMEPERIODLASTYEAR ( dim_date[date] ) )
+		formatString: ₹ #,0
+		displayFolder: Time Intelligence
+
+	/// Year-over-year growth; blank when there is no prior-year data.
+	measure 'Revenue YoY %' =
+			VAR _cur = [Total Revenue]
+			VAR _py = [Revenue PY]
+			RETURN
+				IF ( NOT ISBLANK ( _py ), DIVIDE ( _cur - _py, _py ) )
+		formatString: +0.0%;-0.0%;0.0%
+		displayFolder: Time Intelligence
+
+	/// Revenue in the previous month.
+	measure 'Revenue PM' = CALCULATE ( [Total Revenue], DATEADD ( dim_date[date], -1, MONTH ) )
+		formatString: ₹ #,0
+		displayFolder: Time Intelligence
+
+	/// Month-over-month growth.
+	measure 'Revenue MoM %' = DIVIDE ( [Total Revenue] - [Revenue PM], [Revenue PM] )
+		formatString: +0.0%;-0.0%;0.0%
+		displayFolder: Time Intelligence
+
+	/// Month to date.
+	measure 'Revenue MTD' = TOTALMTD ( [Total Revenue], dim_date[date] )
+		formatString: ₹ #,0
+		displayFolder: Time Intelligence
+
+	/// Quarter to date.
+	measure 'Revenue QTD' = TOTALQTD ( [Total Revenue], dim_date[date] )
+		formatString: ₹ #,0
+		displayFolder: Time Intelligence
+
+	/// Calendar year to date.
+	measure 'Revenue YTD' = TOTALYTD ( [Total Revenue], dim_date[date] )
+		formatString: ₹ #,0
+		displayFolder: Time Intelligence
+
+	/// Indian financial year to date (April-March).
+	measure 'Revenue FYTD' = TOTALYTD ( [Total Revenue], dim_date[date], "31/3" )
+		formatString: ₹ #,0
+		displayFolder: Time Intelligence
+
+	/// Cumulative revenue from the first date up to the current context.
+	measure 'Revenue Running Total' =
+			VAR _maxDate = MAX ( dim_date[date] )
+			RETURN
+				CALCULATE ( [Total Revenue], dim_date[date] <= _maxDate, REMOVEFILTERS ( dim_date ) )
+		formatString: ₹ #,0
+		displayFolder: Time Intelligence
+
+	/// Average monthly revenue over the last 3 months.
+	measure 'Revenue 3M Rolling Avg' =
+			VAR _months =
+				DATESINPERIOD ( dim_date[date], MAX ( dim_date[date] ), -3, MONTH )
+			RETURN
+				DIVIDE ( CALCULATE ( [Total Revenue], _months ), 3 )
+		formatString: ₹ #,0
+		displayFolder: Time Intelligence
+
+	/// Rank of the category by revenue, respecting other filters.
+	measure 'Category Rank' =
+			IF (
+				HASONEVALUE ( dim_product[category] ),
+				RANKX ( ALL ( dim_product[category] ), [Total Revenue],, DESC, DENSE )
+			)
+		formatString: 0
+		displayFolder: Ranking
+
+	/// Rank of the city within the current selection.
+	measure 'City Rank' =
+			IF (
+				HASONEVALUE ( dim_store[city] ),
+				RANKX ( ALLSELECTED ( dim_store[city] ), [Total Revenue],, DESC, DENSE )
+			)
+		formatString: 0
+		displayFolder: Ranking
+
+	/// Revenue shown only for the top N categories (N from the what-if slicer).
+	measure 'Top N Revenue' =
+			VAR _n = SELECTEDVALUE ( 'Top N'[Top N], 5 )
+			RETURN
+				IF ( [Category Rank] <= _n, [Total Revenue] )
+		formatString: ₹ #,0
+		displayFolder: Ranking
+
+	/// Share of the level above in the Country > State > City > Store drill-down.
+	measure 'Revenue Share of Parent' =
+			VAR _all =
+				SWITCH (
+					TRUE (),
+					ISINSCOPE ( dim_store[store_name] ), CALCULATE ( [Total Revenue], ALLSELECTED ( dim_store[store_name] ) ),
+					ISINSCOPE ( dim_store[city] ), CALCULATE ( [Total Revenue], ALLSELECTED ( dim_store[city] ) ),
+					ISINSCOPE ( dim_store[state] ), CALCULATE ( [Total Revenue], ALLSELECTED ( dim_store[state] ) ),
+					CALCULATE ( [Total Revenue], ALLSELECTED ( dim_store[country] ) )
+				)
+			RETURN
+				DIVIDE ( [Total Revenue], _all )
+		formatString: 0.0%
+		displayFolder: Ranking
+
+	/// Customers whose first-ever purchase falls in the selected period.
+	measure 'New Customers' =
+			VAR _start = MIN ( dim_date[date] )
+			VAR _end = MAX ( dim_date[date] )
+			RETURN
+				COUNTROWS (
+					FILTER (
+						VALUES ( fact_sales[customer_key] ),
+						VAR _first = CALCULATE ( MIN ( dim_date[date] ), REMOVEFILTERS ( dim_date ) )
+						RETURN _first >= _start && _first <= _end
+					)
+				)
+		formatString: #,0
+		displayFolder: Customers
+
+	/// Average revenue per buying customer.
+	measure 'Revenue per Customer' = DIVIDE ( [Total Revenue], [Active Customers] )
+		formatString: ₹ #,0
+		displayFolder: Customers
+
+	column order_id
+		dataType: string
+		summarizeBy: none
+		sourceColumn: order_id
+
+	column customer_key
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: customer_key
+
+	column store_key
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: store_key
+
+	column product_key
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: product_key
+
+	column channel
+		dataType: string
+		summarizeBy: none
+		sourceColumn: channel
+
+	column quantity
+		dataType: int64
+		summarizeBy: sum
+		sourceColumn: quantity
+
+	column unit_price
+		dataType: decimal
+		formatString: #,0.00
+		summarizeBy: none
+		sourceColumn: unit_price
+
+	column discount_pct
+		dataType: decimal
+		formatString: 0.0%
+		summarizeBy: none
+		sourceColumn: discount_pct
+
+	column is_returned
+		dataType: boolean
+		summarizeBy: none
+		sourceColumn: is_returned
+
+	column date_key
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: date_key
+
+	column net_revenue
+		dataType: decimal
+		formatString: #,0.00
+		summarizeBy: sum
+		sourceColumn: net_revenue
+
+	column discount_amount
+		dataType: decimal
+		isHidden
+		formatString: #,0.00
+		summarizeBy: sum
+		sourceColumn: discount_amount
+
+	column cost
+		dataType: decimal
+		formatString: #,0.00
+		summarizeBy: sum
+		sourceColumn: cost
+
+	partition fact_sales = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "fact_sales.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"order_id", text}, {"customer_key", Int64.Type}, {"store_key", Int64.Type}, {"product_key", Int64.Type}, {"channel", text}, {"quantity", Int64.Type}, {"unit_price", Currency.Type}, {"discount_pct", Currency.Type}, {"is_returned", type logical}, {"date_key", Int64.Type}, {"net_revenue", Currency.Type}, {"discount_amount", Currency.Type}, {"cost", Currency.Type}}, "en-US")
+				in
+				    Typed
+

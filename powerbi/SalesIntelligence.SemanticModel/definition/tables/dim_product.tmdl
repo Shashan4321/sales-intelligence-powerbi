@@ -1,0 +1,60 @@
+table dim_product
+
+	column sku
+		dataType: string
+		summarizeBy: none
+		sourceColumn: sku
+
+	column product_name
+		dataType: string
+		summarizeBy: none
+		sourceColumn: product_name
+
+	column category
+		dataType: string
+		summarizeBy: none
+		sourceColumn: category
+
+	column subcategory
+		dataType: string
+		summarizeBy: none
+		sourceColumn: subcategory
+
+	column brand
+		dataType: string
+		summarizeBy: none
+		sourceColumn: brand
+
+	column list_price
+		dataType: decimal
+		formatString: #,0.00
+		summarizeBy: none
+		sourceColumn: list_price
+
+	column product_key
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: product_key
+
+	hierarchy Product
+
+		level category
+			column: category
+
+		level subcategory
+			column: subcategory
+
+		level product_name
+			column: product_name
+
+	partition dim_product = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "dim_product.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"sku", text}, {"product_name", text}, {"category", text}, {"subcategory", text}, {"brand", text}, {"list_price", Currency.Type}, {"product_key", Int64.Type}}, "en-US")
+				in
+				    Typed
+
