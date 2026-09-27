@@ -111,7 +111,7 @@ def run(db: Path = ROOT / "data" / "sales.duckdb") -> list[tuple[str, str, str]]
         "|---|---|---:|",
     ]
     lines += [f"| {m} | {c} | {v} |" for m, c, v in rows]
-    (out / "expected_measure_values.md").write_text("\n".join(lines) + "\n")
+    (out / "expected_measure_values.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
     return rows
 
 
